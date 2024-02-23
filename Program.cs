@@ -1,3 +1,12 @@
+﻿         
+using AppMobileBackEnd.DbContexts;
+using AppMobileBackEnd.Dtos.Account;
+using AppMobileBackEnd.Services.Implements;
+using AppMobileBackEnd.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace AppMobileBackEnd
 {
@@ -13,6 +22,40 @@ namespace AppMobileBackEnd
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddScoped<IMusciServices, MusicServices>();
+            builder.Services.AddScoped<ICategoryServices, CategoryServices>();
+            builder.Services.AddScoped< IMusicSeacrhServices, SearchMusicServices>();
+            builder.Services.AddScoped<IArtistServices, ArtistServices>();
+            builder.Services.AddScoped<IAccountServices, AccountServices>();
+
+            builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("AppSettings"));
+
+            var secretKey = builder.Configuration["AppSettings:SecretKey"];
+            var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
+
+            builder
+                .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opt =>
+                {
+                    opt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        //tự cấp token
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+
+                        //ký vào token
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
+
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
+            // Connect DataBase
+            builder.Services.AddDbContext<ApplicationMyDBContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("MyDB"));
+            });
 
             var app = builder.Build();
 
@@ -22,6 +65,8 @@ namespace AppMobileBackEnd
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

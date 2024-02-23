@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AppMobileBackEnd")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+74c75135f9bc7dc3f3c5ea4179596f6e63dff397")]
 [assembly: System.Reflection.AssemblyProductAttribute("AppMobileBackEnd")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AppMobileBackEnd")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
